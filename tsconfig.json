@@ -1,0 +1,52 @@
+{
+  "compilerOptions": {
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "resolvePackageJsonExports": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "ES2023",
+    "types": [
+      "node",
+      "jest"
+    ],
+    "sourceMap": true,
+    "outDir": "./dist",
+    "incremental": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "strictPropertyInitialization": false
+  },
+  "files": [],
+  "references": [
+    {
+      "path": "./apps/backend/tsconfig.app.json"
+    },
+    {
+      "path": "./apps/api-gateway/tsconfig.app.json"
+    },
+    {
+      "path": "./apps/auth-service/tsconfig.app.json"
+    },
+    {
+      "path": "./apps/user-service/tsconfig.app.json"
+    },
+    {
+      "path": "./apps/restaurant-service/tsconfig.app.json"
+    },
+    {
+      "path": "./apps/order-service/tsconfig.app.json"
+    },
+    {
+      "path": "./apps/rider-service/tsconfig.app.json"
+    },
+    {
+      "path": "./apps/payment-service/tsconfig.app.json"
+    }
+  ]
+}

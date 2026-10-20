@@ -1,0 +1,122 @@
+[
+  {
+    "id": "table.PasswordResetIpRateLimit",
+    "label": "Create table \"PasswordResetIpRateLimit\"",
+    "summary": "Creates table \"PasswordResetIpRateLimit\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "PasswordResetIpRateLimit"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"PasswordResetIpRateLimit\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"PasswordResetIpRateLimit\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"PasswordResetIpRateLimit\"",
+        "sql": "CREATE TABLE \"public\".\"PasswordResetIpRateLimit\" (\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"id\" text NOT NULL,\n  \"ipHash\" text NOT NULL,\n  \"requestCount\" int4 DEFAULT 0 NOT NULL,\n  \"updatedAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"windowStart\" timestamptz NOT NULL,\n  \"windowType\" text NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"PasswordResetIpRateLimit\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"PasswordResetIpRateLimit\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.PasswordResetIpRateLimit.PasswordResetIpRateLimit_ipHash_windowType_windowStart_key",
+    "label": "Add unique constraint on \"PasswordResetIpRateLimit\" (ipHash, windowType, windowStart)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "PasswordResetIpRateLimit_ipHash_windowType_windowStart_key",
+        "table": "PasswordResetIpRateLimit"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"PasswordResetIpRateLimit_ipHash_windowType_windowStart_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "PasswordResetIpRateLimit_ipHash_windowType_windowStart_key",
+          "public",
+          "\"public\".\"PasswordResetIpRateLimit\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"PasswordResetIpRateLimit_ipHash_windowType_windowStart_key\"",
+        "sql": "ALTER TABLE \"public\".\"PasswordResetIpRateLimit\" ADD CONSTRAINT \"PasswordResetIpRateLimit_ipHash_windowType_windowStart_key\" UNIQUE (\"ipHash\", \"windowType\", \"windowStart\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"PasswordResetIpRateLimit_ipHash_windowType_windowStart_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "PasswordResetIpRateLimit_ipHash_windowType_windowStart_key",
+          "public",
+          "\"public\".\"PasswordResetIpRateLimit\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.PasswordResetIpRateLimit.PasswordResetIpRateLimit_windowStart_idx_4944f72a",
+    "label": "Create index \"PasswordResetIpRateLimit_windowStart_idx_4944f72a\" on \"PasswordResetIpRateLimit\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "PasswordResetIpRateLimit_windowStart_idx_4944f72a",
+        "table": "PasswordResetIpRateLimit"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"PasswordResetIpRateLimit_windowStart_idx_4944f72a\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"PasswordResetIpRateLimit_windowStart_idx_4944f72a\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"PasswordResetIpRateLimit_windowStart_idx_4944f72a\"",
+        "sql": "CREATE INDEX \"PasswordResetIpRateLimit_windowStart_idx_4944f72a\" ON \"public\".\"PasswordResetIpRateLimit\" (\"windowStart\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"PasswordResetIpRateLimit_windowStart_idx_4944f72a\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"PasswordResetIpRateLimit_windowStart_idx_4944f72a\""
+        ]
+      }
+    ]
+  }
+]

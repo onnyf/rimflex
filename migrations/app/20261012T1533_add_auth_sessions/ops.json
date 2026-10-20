@@ -1,0 +1,161 @@
+[
+  {
+    "id": "table.AuthSession",
+    "label": "Create table \"AuthSession\"",
+    "summary": "Creates table \"AuthSession\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "AuthSession"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"AuthSession\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"AuthSession\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"AuthSession\"",
+        "sql": "CREATE TABLE \"public\".\"AuthSession\" (\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"expiresAt\" timestamptz NOT NULL,\n  \"id\" text NOT NULL,\n  \"revokedAt\" timestamptz,\n  \"tokenHash\" text NOT NULL,\n  \"userId\" text NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"AuthSession\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"AuthSession\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.AuthSession.AuthSession_tokenHash_key",
+    "label": "Add unique constraint on \"AuthSession\" (tokenHash)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "AuthSession_tokenHash_key",
+        "table": "AuthSession"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"AuthSession_tokenHash_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "AuthSession_tokenHash_key",
+          "public",
+          "\"public\".\"AuthSession\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"AuthSession_tokenHash_key\"",
+        "sql": "ALTER TABLE \"public\".\"AuthSession\" ADD CONSTRAINT \"AuthSession_tokenHash_key\" UNIQUE (\"tokenHash\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"AuthSession_tokenHash_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "AuthSession_tokenHash_key",
+          "public",
+          "\"public\".\"AuthSession\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.AuthSession.AuthSession_expiresAt_idx_6b6b8c10",
+    "label": "Create index \"AuthSession_expiresAt_idx_6b6b8c10\" on \"AuthSession\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "AuthSession_expiresAt_idx_6b6b8c10",
+        "table": "AuthSession"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"AuthSession_expiresAt_idx_6b6b8c10\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"AuthSession_expiresAt_idx_6b6b8c10\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"AuthSession_expiresAt_idx_6b6b8c10\"",
+        "sql": "CREATE INDEX \"AuthSession_expiresAt_idx_6b6b8c10\" ON \"public\".\"AuthSession\" (\"expiresAt\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"AuthSession_expiresAt_idx_6b6b8c10\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"AuthSession_expiresAt_idx_6b6b8c10\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.AuthSession.AuthSession_userId_idx_a489d58a",
+    "label": "Create index \"AuthSession_userId_idx_a489d58a\" on \"AuthSession\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "AuthSession_userId_idx_a489d58a",
+        "table": "AuthSession"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"AuthSession_userId_idx_a489d58a\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"AuthSession_userId_idx_a489d58a\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"AuthSession_userId_idx_a489d58a\"",
+        "sql": "CREATE INDEX \"AuthSession_userId_idx_a489d58a\" ON \"public\".\"AuthSession\" (\"userId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"AuthSession_userId_idx_a489d58a\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"AuthSession_userId_idx_a489d58a\""
+        ]
+      }
+    ]
+  }
+]

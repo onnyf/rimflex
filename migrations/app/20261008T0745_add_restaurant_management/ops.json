@@ -1,0 +1,599 @@
+[
+  {
+    "id": "table.MenuCategory",
+    "label": "Create table \"MenuCategory\"",
+    "summary": "Creates table \"MenuCategory\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "MenuCategory"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"MenuCategory\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"MenuCategory\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"MenuCategory\"",
+        "sql": "CREATE TABLE \"public\".\"MenuCategory\" (\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"description\" text,\n  \"id\" text NOT NULL,\n  \"isActive\" bool DEFAULT true NOT NULL,\n  \"name\" text NOT NULL,\n  \"restaurantId\" text NOT NULL,\n  \"sortOrder\" int4 DEFAULT 0 NOT NULL,\n  \"updatedAt\" timestamptz DEFAULT (now()) NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"MenuCategory\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"MenuCategory\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.MenuItem",
+    "label": "Create table \"MenuItem\"",
+    "summary": "Creates table \"MenuItem\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "MenuItem"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"MenuItem\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"MenuItem\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"MenuItem\"",
+        "sql": "CREATE TABLE \"public\".\"MenuItem\" (\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"description\" text,\n  \"discountPrice\" numeric,\n  \"id\" text NOT NULL,\n  \"imageUrl\" text,\n  \"isFeatured\" bool DEFAULT false NOT NULL,\n  \"menuCategoryId\" text NOT NULL,\n  \"name\" text NOT NULL,\n  \"preparationMinutes\" int4,\n  \"price\" numeric NOT NULL,\n  \"restaurantId\" text NOT NULL,\n  \"status\" text DEFAULT 'AVAILABLE' NOT NULL,\n  \"updatedAt\" timestamptz DEFAULT (now()) NOT NULL,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"MenuItem_status_check_5d81c3c6\" CHECK (\"status\" IN ('AVAILABLE', 'UNAVAILABLE', 'OUT_OF_STOCK'))\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"MenuItem\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"MenuItem\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.Restaurant",
+    "label": "Create table \"Restaurant\"",
+    "summary": "Creates table \"Restaurant\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "Restaurant"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"Restaurant\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Restaurant\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"Restaurant\"",
+        "sql": "CREATE TABLE \"public\".\"Restaurant\" (\n  \"city\" text NOT NULL,\n  \"country\" text DEFAULT 'Nigeria' NOT NULL,\n  \"coverImageUrl\" text,\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"description\" text,\n  \"email\" text,\n  \"estimatedPrepMinutes\" int4 DEFAULT 30 NOT NULL,\n  \"id\" text NOT NULL,\n  \"isActive\" bool DEFAULT true NOT NULL,\n  \"isOpen\" bool DEFAULT false NOT NULL,\n  \"latitude\" float8,\n  \"logoUrl\" text,\n  \"longitude\" float8,\n  \"minimumOrder\" float8 DEFAULT 0 NOT NULL,\n  \"name\" text NOT NULL,\n  \"ownerId\" text NOT NULL,\n  \"phone\" text NOT NULL,\n  \"slug\" text NOT NULL,\n  \"state\" text NOT NULL,\n  \"status\" text DEFAULT 'PENDING' NOT NULL,\n  \"streetAddress\" text NOT NULL,\n  \"updatedAt\" timestamptz DEFAULT (now()) NOT NULL,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"Restaurant_status_check_28c2959c\" CHECK (\"status\" IN ('PENDING', 'APPROVED', 'REJECTED', 'SUSPENDED'))\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"Restaurant\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Restaurant\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.RestaurantCategory",
+    "label": "Create table \"RestaurantCategory\"",
+    "summary": "Creates table \"RestaurantCategory\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "RestaurantCategory"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"RestaurantCategory\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"RestaurantCategory\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"RestaurantCategory\"",
+        "sql": "CREATE TABLE \"public\".\"RestaurantCategory\" (\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"description\" text,\n  \"id\" text NOT NULL,\n  \"imageUrl\" text,\n  \"isActive\" bool DEFAULT true NOT NULL,\n  \"name\" text NOT NULL,\n  \"slug\" text NOT NULL,\n  \"updatedAt\" timestamptz DEFAULT (now()) NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"RestaurantCategory\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"RestaurantCategory\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.RestaurantOpeningHour",
+    "label": "Create table \"RestaurantOpeningHour\"",
+    "summary": "Creates table \"RestaurantOpeningHour\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "RestaurantOpeningHour"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"RestaurantOpeningHour\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"RestaurantOpeningHour\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"RestaurantOpeningHour\"",
+        "sql": "CREATE TABLE \"public\".\"RestaurantOpeningHour\" (\n  \"closingTime\" text NOT NULL,\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"dayOfWeek\" int4 NOT NULL,\n  \"id\" text NOT NULL,\n  \"isClosed\" bool DEFAULT false NOT NULL,\n  \"openingTime\" text NOT NULL,\n  \"restaurantId\" text NOT NULL,\n  \"updatedAt\" timestamptz DEFAULT (now()) NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"RestaurantOpeningHour\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"RestaurantOpeningHour\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.Restaurant.Restaurant_slug_key",
+    "label": "Add unique constraint on \"Restaurant\" (slug)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "Restaurant_slug_key",
+        "table": "Restaurant"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"Restaurant_slug_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Restaurant_slug_key",
+          "public",
+          "\"public\".\"Restaurant\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"Restaurant_slug_key\"",
+        "sql": "ALTER TABLE \"public\".\"Restaurant\" ADD CONSTRAINT \"Restaurant_slug_key\" UNIQUE (\"slug\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"Restaurant_slug_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Restaurant_slug_key",
+          "public",
+          "\"public\".\"Restaurant\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.RestaurantCategory.RestaurantCategory_name_key",
+    "label": "Add unique constraint on \"RestaurantCategory\" (name)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "RestaurantCategory_name_key",
+        "table": "RestaurantCategory"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"RestaurantCategory_name_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "RestaurantCategory_name_key",
+          "public",
+          "\"public\".\"RestaurantCategory\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"RestaurantCategory_name_key\"",
+        "sql": "ALTER TABLE \"public\".\"RestaurantCategory\" ADD CONSTRAINT \"RestaurantCategory_name_key\" UNIQUE (\"name\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"RestaurantCategory_name_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "RestaurantCategory_name_key",
+          "public",
+          "\"public\".\"RestaurantCategory\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.RestaurantCategory.RestaurantCategory_slug_key",
+    "label": "Add unique constraint on \"RestaurantCategory\" (slug)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "RestaurantCategory_slug_key",
+        "table": "RestaurantCategory"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"RestaurantCategory_slug_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "RestaurantCategory_slug_key",
+          "public",
+          "\"public\".\"RestaurantCategory\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"RestaurantCategory_slug_key\"",
+        "sql": "ALTER TABLE \"public\".\"RestaurantCategory\" ADD CONSTRAINT \"RestaurantCategory_slug_key\" UNIQUE (\"slug\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"RestaurantCategory_slug_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "RestaurantCategory_slug_key",
+          "public",
+          "\"public\".\"RestaurantCategory\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.RestaurantOpeningHour.RestaurantOpeningHour_restaurantId_dayOfWeek_key",
+    "label": "Add unique constraint on \"RestaurantOpeningHour\" (restaurantId, dayOfWeek)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "RestaurantOpeningHour_restaurantId_dayOfWeek_key",
+        "table": "RestaurantOpeningHour"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"RestaurantOpeningHour_restaurantId_dayOfWeek_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "RestaurantOpeningHour_restaurantId_dayOfWeek_key",
+          "public",
+          "\"public\".\"RestaurantOpeningHour\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"RestaurantOpeningHour_restaurantId_dayOfWeek_key\"",
+        "sql": "ALTER TABLE \"public\".\"RestaurantOpeningHour\" ADD CONSTRAINT \"RestaurantOpeningHour_restaurantId_dayOfWeek_key\" UNIQUE (\"restaurantId\", \"dayOfWeek\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"RestaurantOpeningHour_restaurantId_dayOfWeek_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "RestaurantOpeningHour_restaurantId_dayOfWeek_key",
+          "public",
+          "\"public\".\"RestaurantOpeningHour\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.MenuCategory.MenuCategory_restaurantId_idx_cf3ee7d0",
+    "label": "Create index \"MenuCategory_restaurantId_idx_cf3ee7d0\" on \"MenuCategory\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "MenuCategory_restaurantId_idx_cf3ee7d0",
+        "table": "MenuCategory"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"MenuCategory_restaurantId_idx_cf3ee7d0\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"MenuCategory_restaurantId_idx_cf3ee7d0\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"MenuCategory_restaurantId_idx_cf3ee7d0\"",
+        "sql": "CREATE INDEX \"MenuCategory_restaurantId_idx_cf3ee7d0\" ON \"public\".\"MenuCategory\" (\"restaurantId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"MenuCategory_restaurantId_idx_cf3ee7d0\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"MenuCategory_restaurantId_idx_cf3ee7d0\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.MenuItem.MenuItem_menuCategoryId_idx_eeecb06e",
+    "label": "Create index \"MenuItem_menuCategoryId_idx_eeecb06e\" on \"MenuItem\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "MenuItem_menuCategoryId_idx_eeecb06e",
+        "table": "MenuItem"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"MenuItem_menuCategoryId_idx_eeecb06e\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"MenuItem_menuCategoryId_idx_eeecb06e\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"MenuItem_menuCategoryId_idx_eeecb06e\"",
+        "sql": "CREATE INDEX \"MenuItem_menuCategoryId_idx_eeecb06e\" ON \"public\".\"MenuItem\" (\"menuCategoryId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"MenuItem_menuCategoryId_idx_eeecb06e\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"MenuItem_menuCategoryId_idx_eeecb06e\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.MenuItem.MenuItem_restaurantId_idx_cf3ee7d0",
+    "label": "Create index \"MenuItem_restaurantId_idx_cf3ee7d0\" on \"MenuItem\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "MenuItem_restaurantId_idx_cf3ee7d0",
+        "table": "MenuItem"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"MenuItem_restaurantId_idx_cf3ee7d0\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"MenuItem_restaurantId_idx_cf3ee7d0\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"MenuItem_restaurantId_idx_cf3ee7d0\"",
+        "sql": "CREATE INDEX \"MenuItem_restaurantId_idx_cf3ee7d0\" ON \"public\".\"MenuItem\" (\"restaurantId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"MenuItem_restaurantId_idx_cf3ee7d0\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"MenuItem_restaurantId_idx_cf3ee7d0\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.Restaurant.Restaurant_city_state_idx_80906990",
+    "label": "Create index \"Restaurant_city_state_idx_80906990\" on \"Restaurant\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "Restaurant_city_state_idx_80906990",
+        "table": "Restaurant"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"Restaurant_city_state_idx_80906990\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Restaurant_city_state_idx_80906990\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"Restaurant_city_state_idx_80906990\"",
+        "sql": "CREATE INDEX \"Restaurant_city_state_idx_80906990\" ON \"public\".\"Restaurant\" (\"city\", \"state\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"Restaurant_city_state_idx_80906990\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Restaurant_city_state_idx_80906990\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.Restaurant.Restaurant_ownerId_idx_e2d0c1ef",
+    "label": "Create index \"Restaurant_ownerId_idx_e2d0c1ef\" on \"Restaurant\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "Restaurant_ownerId_idx_e2d0c1ef",
+        "table": "Restaurant"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"Restaurant_ownerId_idx_e2d0c1ef\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Restaurant_ownerId_idx_e2d0c1ef\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"Restaurant_ownerId_idx_e2d0c1ef\"",
+        "sql": "CREATE INDEX \"Restaurant_ownerId_idx_e2d0c1ef\" ON \"public\".\"Restaurant\" (\"ownerId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"Restaurant_ownerId_idx_e2d0c1ef\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Restaurant_ownerId_idx_e2d0c1ef\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.Restaurant.Restaurant_status_idx_e98638ab",
+    "label": "Create index \"Restaurant_status_idx_e98638ab\" on \"Restaurant\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "Restaurant_status_idx_e98638ab",
+        "table": "Restaurant"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"Restaurant_status_idx_e98638ab\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Restaurant_status_idx_e98638ab\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"Restaurant_status_idx_e98638ab\"",
+        "sql": "CREATE INDEX \"Restaurant_status_idx_e98638ab\" ON \"public\".\"Restaurant\" (\"status\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"Restaurant_status_idx_e98638ab\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Restaurant_status_idx_e98638ab\""
+        ]
+      }
+    ]
+  }
+]

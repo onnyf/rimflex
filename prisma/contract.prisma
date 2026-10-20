@@ -1,0 +1,233 @@
+// use prisma-8
+
+enum UserRole {
+  CUSTOMER
+  RESTAURANT_OWNER
+  RIDER
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+  DELETED
+}
+model User {
+  id           String     @id @default(uuid())
+  email        String?    @unique
+  phone        String?    @unique
+  passwordHash String
+  firstName    String
+  lastName     String
+  role         UserRole   @default(CUSTOMER)
+  status       UserStatus @default(ACTIVE)
+
+  emailVerifiedAt DateTime?
+  phoneVerifiedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
+enum AddressType {
+  HOME
+  WORK
+  OTHER
+}
+
+model CustomerProfile {
+  id                String   @id @default(uuid())
+  userId            String   @unique
+  avatarUrl         String?
+  dateOfBirth       DateTime?
+  preferredLanguage String   @default("en")
+  marketingOptIn    Boolean  @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
+model Address {
+  id            String      @id @default(uuid())
+  userId        String
+  label         String
+  type          AddressType @default(HOME)
+  recipientName String?
+  phone         String?
+  streetAddress String
+  apartment     String?
+  landmark      String?
+  city          String
+  state         String
+  country       String      @default("Nigeria")
+  latitude      Float?
+  longitude     Float?
+  deliveryNote  String?
+  isDefault     Boolean     @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+
+enum RestaurantStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  SUSPENDED
+}
+
+enum MenuItemStatus {
+  AVAILABLE
+  UNAVAILABLE
+  OUT_OF_STOCK
+}
+
+model Restaurant {
+  id              String @id @default(uuid())
+  ownerId         String
+  name            String
+  slug            String @unique
+  description     String?
+  logoUrl         String?
+  coverImageUrl   String?
+
+  email           String?
+  phone           String
+  streetAddress   String
+  city            String
+  state           String
+  country         String @default("Nigeria")
+  latitude        Float?
+  longitude       Float?
+
+  status          RestaurantStatus @default(PENDING)
+  isOpen          Boolean @default(false)
+  isActive        Boolean @default(true)
+  minimumOrder    Float   @default(0)
+  estimatedPrepMinutes Int @default(30)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  @@index([ownerId])
+  @@index([city, state])
+  @@index([status])
+}
+
+model RestaurantCategory {
+  id          String @id @default(uuid())
+  name        String @unique
+  slug        String @unique
+  description String?
+  imageUrl    String?
+  isActive    Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
+model MenuCategory {
+  id           String @id @default(uuid())
+  restaurantId String
+  name         String
+  description  String?
+  sortOrder    Int @default(0)
+  isActive     Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  @@index([restaurantId])
+}
+
+model MenuItem {
+  id             String @id @default(uuid())
+  restaurantId   String
+  menuCategoryId String
+
+  name           String
+  description    String?
+  imageUrl       String?
+  price          Decimal
+  discountPrice  Decimal?
+  status         MenuItemStatus @default(AVAILABLE)
+  preparationMinutes Int?
+  isFeatured     Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  @@index([restaurantId])
+  @@index([menuCategoryId])
+}
+
+model RestaurantOpeningHour {
+  id           String @id @default(uuid())
+  restaurantId String
+  dayOfWeek    Int
+  openingTime  String
+  closingTime  String
+  isClosed     Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  @@unique([restaurantId, dayOfWeek])
+}
+
+model AuthSession {
+  id String @id @default(uuid())
+  userId String
+  tokenHash String @unique
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+  revokedAt DateTime?
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+
+model EmailVerificationCode {
+  id String @id @default(uuid())
+  userId String
+  codeHash String
+  expiresAt DateTime
+  attemptCount Int @default(0)
+  consumedAt DateTime?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+
+model PasswordResetToken {
+  id String @id @default(uuid())
+  userId String
+  tokenHash String @unique
+  expiresAt DateTime
+  consumedAt DateTime?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model PasswordResetIpRateLimit {
+  id String @id @default(uuid())
+  ipHash String
+  windowType String
+  windowStart DateTime
+  requestCount Int @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  @@unique([ipHash, windowType, windowStart])
+  @@index([windowStart])
+}

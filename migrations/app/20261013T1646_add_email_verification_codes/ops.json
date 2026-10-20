@@ -1,0 +1,119 @@
+[
+  {
+    "id": "table.EmailVerificationCode",
+    "label": "Create table \"EmailVerificationCode\"",
+    "summary": "Creates table \"EmailVerificationCode\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "EmailVerificationCode"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"EmailVerificationCode\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"EmailVerificationCode\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"EmailVerificationCode\"",
+        "sql": "CREATE TABLE \"public\".\"EmailVerificationCode\" (\n  \"attemptCount\" int4 DEFAULT 0 NOT NULL,\n  \"codeHash\" text NOT NULL,\n  \"consumedAt\" timestamptz,\n  \"createdAt\" timestamptz DEFAULT (now()) NOT NULL,\n  \"expiresAt\" timestamptz NOT NULL,\n  \"id\" text NOT NULL,\n  \"userId\" text NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"EmailVerificationCode\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"EmailVerificationCode\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.EmailVerificationCode.EmailVerificationCode_expiresAt_idx_6b6b8c10",
+    "label": "Create index \"EmailVerificationCode_expiresAt_idx_6b6b8c10\" on \"EmailVerificationCode\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "EmailVerificationCode_expiresAt_idx_6b6b8c10",
+        "table": "EmailVerificationCode"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"EmailVerificationCode_expiresAt_idx_6b6b8c10\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"EmailVerificationCode_expiresAt_idx_6b6b8c10\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"EmailVerificationCode_expiresAt_idx_6b6b8c10\"",
+        "sql": "CREATE INDEX \"EmailVerificationCode_expiresAt_idx_6b6b8c10\" ON \"public\".\"EmailVerificationCode\" (\"expiresAt\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"EmailVerificationCode_expiresAt_idx_6b6b8c10\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"EmailVerificationCode_expiresAt_idx_6b6b8c10\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.EmailVerificationCode.EmailVerificationCode_userId_idx_a489d58a",
+    "label": "Create index \"EmailVerificationCode_userId_idx_a489d58a\" on \"EmailVerificationCode\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "EmailVerificationCode_userId_idx_a489d58a",
+        "table": "EmailVerificationCode"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"EmailVerificationCode_userId_idx_a489d58a\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"EmailVerificationCode_userId_idx_a489d58a\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"EmailVerificationCode_userId_idx_a489d58a\"",
+        "sql": "CREATE INDEX \"EmailVerificationCode_userId_idx_a489d58a\" ON \"public\".\"EmailVerificationCode\" (\"userId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"EmailVerificationCode_userId_idx_a489d58a\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"EmailVerificationCode_userId_idx_a489d58a\""
+        ]
+      }
+    ]
+  }
+]
