@@ -68,3 +68,9 @@ rimflex-backups/
 *.ts.backup-*
 *.before-step-*.bak
 .gitignore.before-step-*.bak
+
+# Local AI/editor-tool directories - never publish
+/.agents/
+/.claude/
+/.cursor/
+/.devin/
